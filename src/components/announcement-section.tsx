@@ -1,33 +1,50 @@
 import Image from "next/image";
-import { ircc27Team } from "@/content/home";
-import { TeamCircularCarousel } from "./team-circular-carousel";
+import { ColorBendsBackground } from "./color-bends-background";
+import { TeamLineup } from "./team-lineup";
 
-// Section 1: IRCC'27 announcement + organising team on a 3D circular carousel.
-// Logo and team photos are cropped from the original ircc27-banner.jpg.
-const teamItems = ircc27Team.map((p) => ({
-  src: p.image,
-  alt: `${p.name}, ${p.role}`,
-  title: p.name,
-  subtitle: p.role,
-}));
+const BAND_COLORS = ["#f15b43", "#ff9d00", "#7c3aed"];
 
+// Section 1: IRCC'27 announcement + the full organising team on stage.
+// Logos and team photos are cropped from the original ircc27-banner.jpg.
 export function AnnouncementSection() {
   return (
     <section aria-labelledby="announcement-title" className="relative overflow-hidden bg-navy-950">
+      {/* Animated WebGL colour bands (brand coral / saffron + violet accent) */}
+      <div aria-hidden className="absolute inset-0">
+        <ColorBendsBackground
+          colors={BAND_COLORS}
+          rotation={90}
+          speed={0.2}
+          scale={1}
+          frequency={1}
+          warpStrength={1}
+          mouseInfluence={1}
+          noise={0.15}
+          parallax={0.5}
+          iterations={1}
+          intensity={1.5}
+          bandWidth={6}
+          transparent
+          autoRotate={0}
+        />
+      </div>
+      {/* Readability veil over the bands */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_80%_0%,rgba(241,91,67,0.22),transparent),radial-gradient(50%_60%_at_0%_100%,rgba(43,179,74,0.16),transparent)]"
+        className="pointer-events-none absolute inset-0 bg-linear-to-b from-navy-950/78 via-navy-950/60 to-navy-950/88"
       />
-      {/* Giant outlined year (matches section 2) */}
+      {/* Giant outlined year */}
       <p
         aria-hidden
-        className="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[34vw] font-extrabold leading-none tracking-tighter text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.08)] lg:text-[26vw]"
+        className="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[34vw] font-extrabold leading-none tracking-tighter text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.07)] lg:text-[26vw]"
       >
         2027
       </p>
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:grid-cols-[1fr_1.2fr] lg:gap-14 lg:px-8 lg:pb-16 lg:pt-36">
-        <div className="animate-fade-up text-center lg:text-left">
-          <div className="mx-auto grid w-full max-w-xl grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-black px-4 py-4 shadow-2xl shadow-black/40 ring-1 ring-white/10 sm:gap-5 sm:px-5 lg:mx-0">
+
+      <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:px-8 lg:pb-28 lg:pt-36">
+        {/* Announcement */}
+        <div className="animate-fade-up mx-auto max-w-3xl text-center">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-black px-4 py-4 shadow-2xl shadow-black/40 ring-1 ring-white/10 sm:gap-5 sm:px-5">
             <Image
               src="/images/gyra-logo.png"
               alt="GYRA - Global Young Researchers' Academy"
@@ -53,7 +70,7 @@ export function AnnouncementSection() {
           </div>
           <h2
             id="announcement-title"
-            className="mt-8 text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl"
+            className="mt-8 text-3xl font-extrabold uppercase leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
             Thank You for Attending <span className="text-coral">IRCC 2026!</span>
           </h2>
@@ -62,42 +79,20 @@ export function AnnouncementSection() {
           </p>
         </div>
 
-        <div className="min-w-0">
-          <p className="text-center text-xs font-bold uppercase tracking-[0.25em] text-white/60">
-            IRCC&apos;27 Organising Team
-          </p>
-          <div className="relative h-[420px] w-full text-white sm:h-[480px]">
-            <TeamCircularCarousel
-              items={teamItems}
-              preset="cylinder"
-              intro="rise"
-              cardWidth={290}
-              aspectRatio={290 / 275}
-              speed={14}
-              captions
-              gap={22}
-              tilt={-5}
-              curve={1}
-              perspective={2500}
-              autoplay="drift"
-              interval={3}
-              direction="left"
-              momentum={0.6}
-              snap
-              pauseOnHover
-              focusOnClick
-              draggable
-              parallax={0.3}
-              stretch={0.5}
-              fadeColor="#070c18"
-              depthFade={0.55}
-              innerShade={0.6}
-              cornerRadius={14}
-            />
+        {/* Team on stage */}
+        <div className="mt-16 lg:mt-24">
+          <div className="mb-10 flex items-center justify-center gap-4 lg:mb-16">
+            <span aria-hidden className="h-px w-10 bg-linear-to-r from-transparent to-white/30 sm:w-20" />
+            <p className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-[0.25em] text-navy-900 shadow-[0_8px_30px_rgba(0,0,0,0.35)] sm:px-5 sm:text-xs">
+              <span aria-hidden className="size-1.5 rounded-full bg-coral" />
+              IRCC&apos;27 Organising Team
+            </p>
+            <span aria-hidden className="h-px w-10 bg-linear-to-l from-transparent to-white/30 sm:w-20" />
           </div>
+          <TeamLineup />
         </div>
       </div>
-      <div aria-hidden className="h-1 bg-linear-to-r from-coral via-saffron to-leaf" />
+      <div aria-hidden className="relative h-1 bg-linear-to-r from-coral via-saffron to-leaf" />
     </section>
   );
 }
