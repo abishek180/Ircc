@@ -1,181 +1,132 @@
 import Image from "next/image";
-import { hero, sponsors } from "@/content/home";
+import { hero, speakers, sponsors } from "@/content/home";
 import { ArrowRightIcon, MapPinIcon } from "./icons";
-import { SpeakerCarousel } from "./speaker-carousel";
+import { SpeakerOrbit } from "./speaker-orbit";
+import { Spotlight } from "./spotlight";
 
-// Section 2: centered headline + hub-and-spoke diagram.
-// Hub = speaker carousel; spokes = links (top), sponsors (left/right), register (bottom).
-
-function Dot() {
-  return <span className="size-2 shrink-0 rounded-full border border-slate-300 bg-white" />;
-}
-
-function HLine() {
-  return (
-    <div aria-hidden className="hidden flex-1 items-center lg:flex">
-      <Dot />
-      <span className="h-px flex-1 bg-slate-300" />
-      <Dot />
-    </div>
-  );
-}
-
-function VLine() {
-  return (
-    <div aria-hidden className="flex h-10 flex-col items-center">
-      <span className="w-px flex-1 bg-slate-300" />
-      <Dot />
-    </div>
-  );
-}
-
-function SponsorCard({
-  label,
-  labelClass,
-  logo,
-  alt,
-  width,
-  height,
-  href,
-  footer,
-}: {
-  label: string;
-  labelClass: string;
-  logo: string;
-  alt: string;
-  width: number;
-  height: number;
-  href: string;
-  footer?: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group block w-full max-w-[260px] rounded-2xl bg-white p-3 shadow-[0_8px_30px_rgba(13,21,39,0.08)] ring-1 ring-slate-200/70 transition hover:-translate-y-0.5"
-    >
-      <div className="grid h-24 place-items-center rounded-xl border border-slate-100 bg-slate-50 px-4">
-        <Image src={logo} alt={alt} width={width} height={height} className="max-h-14 w-auto object-contain" />
-      </div>
-      <div className="px-1 pb-1 pt-3">
-        <p className={`text-sm font-semibold ${labelClass}`}>{label}</p>
-        {footer && <p className="mt-0.5 text-xs text-slate-500 group-hover:text-coral">{footer}</p>}
-      </div>
-    </a>
-  );
-}
-
+// Section 2: immersive "stage". Conference-hall backdrop, pointer spotlight,
+// giant outlined year, and a rotating orbit of speakers.
 export function HeroSection() {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-[#f2f3f1] bg-[radial-gradient(60%_50%_at_50%_0%,#ffffff,transparent),radial-gradient(40%_40%_at_50%_70%,rgba(255,255,255,0.9),transparent)]"
-    >
-      <div className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 lg:pb-24 lg:pt-20">
-        {/* Headline */}
-        <div className="animate-fade-up text-center">
-          <h1
-            id="hero-title"
-            className="mx-auto text-4xl font-semibold leading-[1.08] tracking-tight text-navy-900 sm:text-5xl lg:text-[58px]"
-          >
-            <span className="lg:whitespace-nowrap">
-              International <span className="text-coral">Research Conference</span>
+    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-navy-950">
+      {/* Backdrop */}
+      <Image src="/images/banner.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover opacity-30" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-b from-navy-950 via-navy-950/80 to-navy-950" />
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]"
+      />
+
+      <Spotlight>
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:px-8 lg:py-28">
+          {/* Copy */}
+          <div className="animate-fade-up text-center lg:text-left">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur">
+              <span className="size-1.5 animate-pulse rounded-full bg-leaf" />
+              {speakers.length} distinguished speakers · Nobel Laureate keynote
             </span>
-            <br />
-            for Children 2026
-          </h1>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {hero.buttons.map((b) =>
-              b.primary ? (
-                <a
-                  key={b.label}
-                  href={b.href}
-                  className="group inline-flex items-center gap-2 rounded-full bg-coral px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-coral/25 transition hover:bg-coral-dark"
-                >
-                  {b.label}
-                  <ArrowRightIcon className="size-4 transition group-hover:translate-x-0.5" />
-                </a>
-              ) : (
-                <a
-                  key={b.label}
-                  href={b.href}
-                  className="inline-flex items-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-navy-900 shadow-sm ring-1 ring-slate-200 transition hover:text-coral hover:ring-coral/40"
-                >
-                  {b.label}
-                </a>
-              ),
-            )}
-          </div>
-        </div>
 
-        {/* Hub-and-spoke diagram */}
-        <div className="mx-auto mt-14 flex max-w-5xl flex-col items-center gap-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-0">
-          {/* Left spoke */}
-          <div className="order-3 flex w-full items-center justify-center lg:order-none">
-            <SponsorCard
-              label={sponsors.poweredBy.label}
-              labelClass="text-navy-900"
-              logo={sponsors.poweredBy.logo}
-              alt={`${sponsors.poweredBy.label} - ${sponsors.poweredBy.name}`}
-              width={sponsors.poweredBy.width}
-              height={sponsors.poweredBy.height}
-              href={sponsors.poweredBy.href}
-              footer={sponsors.poweredBy.display}
-            />
-            <HLine />
-          </div>
-
-          {/* Center column: top card, hub, bottom pill */}
-          <div className="order-1 flex flex-col items-center lg:order-none">
-            <p className="flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs text-slate-500 shadow-[0_8px_30px_rgba(13,21,39,0.08)] ring-1 ring-slate-200/70">
-              <MapPinIcon className="size-4 shrink-0 text-coral" />
-              <span>
-                <span className="font-semibold text-navy-800">Venue:</span> {hero.venue}
-              </span>
-            </p>
-            <VLine />
-
-            <div className="relative w-[300px] rounded-3xl bg-navy-900 p-5 shadow-[0_24px_60px_rgba(13,21,39,0.35)] ring-1 ring-white/5">
-              <div aria-hidden className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(80%_60%_at_50%_0%,rgba(43,179,74,0.18),transparent)]" />
-              <div className="relative">
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-leaf">IRCC 2026</span>
-                  <span className="text-[11px] font-medium text-slate-400">Distinguished Speakers</span>
-                </div>
-                <SpeakerCarousel />
-              </div>
-            </div>
-
-            <div className="flex h-10 flex-col items-center" aria-hidden>
-              <Dot />
-              <span className="w-px flex-1 bg-slate-300" />
-            </div>
-            <a
-              href={hero.speakersHref}
-              className="group inline-flex items-center gap-2 rounded-full bg-navy-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-navy-900/20 transition hover:bg-coral"
+            <h1
+              id="hero-title"
+              className="mt-7 text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
             >
-              View All Speakers
-              <ArrowRightIcon className="size-4 transition group-hover:translate-x-0.5" />
-            </a>
+              International Research Conference{" "}
+              <span className="font-serif italic text-saffron">for Children</span>{" "}
+              <span className="bg-linear-to-r from-coral to-saffron bg-clip-text text-transparent">2026</span>
+            </h1>
+
+            <p className="mt-6 text-sm text-slate-300 sm:text-base">
+              <MapPinIcon className="mr-1.5 inline-block size-4 -translate-y-px text-coral" />
+              <span className="font-semibold text-white">Venue:</span> {hero.venue}
+            </p>
+
+            <div className="mt-9 flex flex-wrap justify-center gap-3 lg:justify-start">
+              {hero.buttons.map((b) =>
+                b.primary ? (
+                  <a
+                    key={b.label}
+                    href={b.href}
+                    className="group inline-flex items-center gap-2 rounded-full bg-coral px-7 py-3.5 text-sm font-semibold text-white shadow-[0_10px_40px_rgba(241,91,67,0.45)] transition hover:bg-coral-dark"
+                  >
+                    {b.label}
+                    <ArrowRightIcon className="size-4 transition group-hover:translate-x-0.5" />
+                  </a>
+                ) : (
+                  <a
+                    key={b.label}
+                    href={b.href}
+                    className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-white/40 hover:bg-white/10"
+                  >
+                    {b.label}
+                  </a>
+                ),
+              )}
+            </div>
+
+            {/* Sponsors */}
+            <div className="mt-12 grid gap-3 sm:grid-cols-2">
+              <a
+                href={sponsors.poweredBy.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur transition hover:border-white/25 hover:bg-white/10"
+              >
+                <span className="grid h-14 w-28 shrink-0 place-items-center rounded-xl bg-white px-2">
+                  <Image
+                    src={sponsors.poweredBy.logo}
+                    alt={sponsors.poweredBy.name}
+                    width={sponsors.poweredBy.width}
+                    height={sponsors.poweredBy.height}
+                    className="h-auto max-h-8 w-full object-contain"
+                  />
+                </span>
+                <span className="text-left">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                    {sponsors.poweredBy.label}
+                  </span>
+                  <span className="block text-sm font-semibold text-white">{sponsors.poweredBy.display}</span>
+                </span>
+              </a>
+              <a
+                href={sponsors.gold.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 rounded-2xl border border-gold/30 bg-gold/5 p-3 backdrop-blur transition hover:border-gold/60 hover:bg-gold/10"
+              >
+                <span className="grid h-14 w-28 shrink-0 place-items-center overflow-hidden rounded-xl bg-white">
+                  <Image
+                    src={sponsors.gold.logo}
+                    alt={sponsors.gold.name}
+                    width={sponsors.gold.width}
+                    height={sponsors.gold.height}
+                    className="h-full w-full object-cover"
+                  />
+                </span>
+                <span className="text-left">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.2em] text-gold">
+                    {sponsors.gold.label}
+                  </span>
+                  <span className="block text-sm font-semibold text-white">{sponsors.gold.name}</span>
+                </span>
+              </a>
+            </div>
           </div>
 
-          {/* Right spoke */}
-          <div className="order-4 flex w-full items-center justify-center lg:order-none">
-            <HLine />
-            <SponsorCard
-              label={sponsors.gold.label}
-              labelClass="text-gold"
-              logo={sponsors.gold.logo}
-              alt={`${sponsors.gold.label} - ${sponsors.gold.name}`}
-              width={sponsors.gold.width}
-              height={sponsors.gold.height}
-              href={sponsors.gold.href}
-              footer={sponsors.gold.name}
-            />
+          {/* Speaker orbit */}
+          <div className="relative">
+            <SpeakerOrbit />
+            <div className="mt-6 text-center">
+              <a
+                href={hero.speakersHref}
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-white/80 transition hover:text-white"
+              >
+                View all speakers
+                <ArrowRightIcon className="size-4 transition group-hover:translate-x-0.5" />
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </Spotlight>
     </section>
   );
 }

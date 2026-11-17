@@ -18,7 +18,14 @@ export function AnnouncementSection() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_60%_at_80%_0%,rgba(241,91,67,0.22),transparent),radial-gradient(50%_60%_at_0%_100%,rgba(43,179,74,0.16),transparent)]"
       />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:gap-14 lg:px-8 lg:py-16">
+      {/* Giant outlined year (matches section 2) */}
+      <p
+        aria-hidden
+        className="pointer-events-none absolute -bottom-10 left-1/2 -translate-x-1/2 select-none whitespace-nowrap text-[34vw] font-extrabold leading-none tracking-tighter text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.08)] lg:text-[26vw]"
+      >
+        2027
+      </p>
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 pb-14 pt-28 sm:px-6 sm:pt-32 lg:grid-cols-[1fr_1.2fr] lg:gap-14 lg:px-8 lg:pb-16 lg:pt-36">
         <div className="animate-fade-up text-center lg:text-left">
           <div className="mx-auto grid w-full max-w-xl grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl bg-black px-4 py-4 shadow-2xl shadow-black/40 ring-1 ring-white/10 sm:gap-5 sm:px-5 lg:mx-0">
             <Image
