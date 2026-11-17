@@ -8,7 +8,8 @@ const AUTOPLAY_MS = 4500;
 
 // All speakers ride a slowly rotating ring; the active one is featured in the
 // centre. Click any avatar to feature it. Autoplay pauses on hover / focus.
-export function SpeakerOrbit() {
+export function SpeakerOrbit({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const light = tone === "light";
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const total = speakers.length;
@@ -34,11 +35,14 @@ export function SpeakerOrbit() {
     >
       <div className="relative aspect-square w-full">
         {/* Orbit guides */}
-        <div aria-hidden className="absolute inset-[6%] rounded-full border border-white/10" />
-        <div aria-hidden className="absolute inset-[22%] rounded-full border border-dashed border-white/10" />
+        <div aria-hidden className={`absolute inset-[6%] rounded-full border ${light ? "border-navy-900/10" : "border-white/10"}`} />
         <div
           aria-hidden
-          className="absolute inset-[22%] rounded-full bg-[radial-gradient(circle,rgba(241,91,67,0.28),transparent_65%)] blur-2xl"
+          className={`absolute inset-[22%] rounded-full border border-dashed ${light ? "border-navy-900/15" : "border-white/10"}`}
+        />
+        <div
+          aria-hidden
+          className={`absolute inset-[22%] rounded-full blur-2xl ${light ? "bg-[radial-gradient(circle,rgba(241,91,67,0.18),transparent_65%)]" : "bg-[radial-gradient(circle,rgba(241,91,67,0.28),transparent_65%)]"}`}
         />
 
         {/* Rotating ring of avatars */}
@@ -65,7 +69,9 @@ export function SpeakerOrbit() {
                     className={`relative block size-11 overflow-hidden rounded-full ring-2 transition duration-300 sm:size-14 ${
                       isActive
                         ? "scale-125 ring-coral shadow-[0_0_24px_rgba(241,91,67,0.7)]"
-                        : "ring-white/20 grayscale hover:scale-110 hover:grayscale-0 hover:ring-white/60"
+                        : light
+                          ? "bg-white ring-white shadow-md grayscale hover:scale-110 hover:grayscale-0 hover:ring-coral/40"
+                          : "ring-white/20 grayscale hover:scale-110 hover:grayscale-0 hover:ring-white/60"
                     }`}
                   >
                     <Image src={s.image} alt="" fill sizes="56px" className="object-cover object-[center_20%]" />
@@ -85,7 +91,7 @@ export function SpeakerOrbit() {
               alt={current.name}
               fill
               sizes="(min-width: 640px) 280px, 50vw"
-              className="relative rounded-full border-4 border-navy-950 object-cover object-[center_20%]"
+              className={`relative rounded-full border-4 object-cover object-[center_20%] ${light ? "border-white" : "border-navy-950"}`}
             />
           </div>
         </div>
@@ -93,12 +99,12 @@ export function SpeakerOrbit() {
 
       {/* Caption */}
       <div key={`c-${active}`} className="animate-fade-up mt-6 text-center" aria-live="polite">
-        <p className="text-xs font-bold uppercase tracking-[0.25em] text-saffron">
+        <p className={`text-xs font-bold uppercase tracking-[0.25em] ${light ? "text-coral" : "text-saffron"}`}>
           Speaker {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
         </p>
-        <h3 className="mt-2 text-2xl font-semibold text-white">{current.name}</h3>
+        <h3 className={`mt-2 text-2xl font-semibold ${light ? "text-navy-900" : "text-white"}`}>{current.name}</h3>
         <p className="mt-1 text-sm font-medium text-coral">{current.role}</p>
-        <p className="mx-auto mt-1 max-w-sm text-sm text-slate-400">{current.org}</p>
+        <p className={`mx-auto mt-1 max-w-sm text-sm ${light ? "text-slate-500" : "text-slate-400"}`}>{current.org}</p>
       </div>
     </div>
   );

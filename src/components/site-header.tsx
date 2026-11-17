@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { authLinks, contact, navLinks, socials } from "@/content/home";
+import { authLinks, contact, navLinks, socials, versions } from "@/content/home";
 import { ChevronDownIcon, CloseIcon, MailIcon, MenuIcon, PhoneIcon, SocialIcon } from "./icons";
 
 // Floating pill navbar. Fixed with a small top gap; its edges line up with the
@@ -15,6 +17,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
 
   const closeAll = () => {
     setMenu(null);
@@ -69,7 +72,7 @@ export function SiteHeader() {
       ref={headerRef}
       className={`fixed inset-x-0 top-0 z-50 pt-3 transition-transform duration-300 ease-out sm:pt-4 ${isHidden ? "-translate-y-[calc(100%+1rem)]" : "translate-y-0"}`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[88rem]">
         <div
           className={`flex items-center justify-between gap-2 rounded-full py-2 pl-3.5 pr-2 ring-1 min-[400px]:gap-3 min-[400px]:pl-4 backdrop-blur-md transition-[background-color,box-shadow] duration-300 sm:pl-6 ${
             scrolled
@@ -90,7 +93,7 @@ export function SiteHeader() {
 
           {/* Desktop links */}
           <nav className="hidden lg:block" aria-label="Main">
-            <ul className="flex items-center gap-1 text-sm font-semibold text-navy-800">
+            <ul className="flex items-center gap-0.5 text-[13px] font-semibold text-navy-800 xl:gap-1 xl:text-sm">
               {navLinks.map((item) =>
                 "children" in item ? (
                   <li
@@ -104,7 +107,7 @@ export function SiteHeader() {
                       aria-haspopup="true"
                       aria-expanded={menu === item.label}
                       onClick={() => setMenu((m) => (m === item.label ? null : item.label))}
-                      className={`flex items-center gap-1 whitespace-nowrap rounded-full px-4 py-2 transition hover:bg-coral/10 hover:text-coral ${menu === item.label ? "bg-coral/10 text-coral" : ""}`}
+                      className={`flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 transition xl:px-4 hover:bg-coral/10 hover:text-coral ${menu === item.label ? "bg-coral/10 text-coral" : ""}`}
                     >
                       {item.label}
                       <ChevronDownIcon
@@ -133,7 +136,7 @@ export function SiteHeader() {
                   <li key={item.label}>
                     <a
                       href={item.href}
-                      className="whitespace-nowrap rounded-full px-4 py-2 transition hover:bg-coral/10 hover:text-coral"
+                      className="whitespace-nowrap rounded-full px-2.5 py-2 transition hover:bg-coral/10 hover:text-coral xl:px-4"
                     >
                       {item.label}
                     </a>
@@ -145,7 +148,30 @@ export function SiteHeader() {
 
           {/* Right side */}
           <div className="flex shrink-0 items-center gap-1.5 min-[400px]:gap-2 sm:gap-3">
-            <a href={contact.phoneHref} className="hidden items-center gap-2.5 pr-1 xl:flex" aria-label={`Call ${contact.phone}`}>
+            {/* Design version switch */}
+            <div
+              role="group"
+              aria-label="Design version"
+              className="hidden items-center rounded-full bg-navy-900/5 p-1 text-xs font-bold md:flex"
+            >
+              {versions.map((v) => {
+                const current = pathname === v.href;
+                return (
+                  <Link
+                    key={v.href}
+                    href={v.href}
+                    title={v.title}
+                    aria-current={current ? "page" : undefined}
+                    className={`rounded-full px-3 py-1.5 transition ${
+                      current ? "bg-navy-900 text-white shadow" : "text-navy-800 hover:text-coral"
+                    }`}
+                  >
+                    {v.label}
+                  </Link>
+                );
+              })}
+            </div>
+            <a href={contact.phoneHref} className="hidden items-center gap-2.5 pr-1 2xl:flex" aria-label={`Call ${contact.phone}`}>
               <span className="grid size-10 place-items-center rounded-full bg-coral/10 text-coral">
                 <PhoneIcon className="size-4" />
               </span>
@@ -162,7 +188,7 @@ export function SiteHeader() {
             </a>
             <a
               href={authLinks.register}
-              className="whitespace-nowrap rounded-full bg-coral px-3.5 py-2 text-[13px] font-bold text-white shadow-lg shadow-coral/25 transition hover:bg-coral-dark min-[400px]:px-4 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-6 sm:py-3"
+              className="whitespace-nowrap rounded-full bg-coral px-3.5 py-2 text-[13px] font-bold text-white shadow-lg shadow-coral/25 transition hover:bg-coral-dark min-[400px]:px-4 min-[400px]:py-2.5 min-[400px]:text-sm sm:px-5 sm:py-3 xl:px-6"
             >
               Register Now
             </a>
@@ -225,6 +251,28 @@ export function SiteHeader() {
                 </a>
               </li>
             </ul>
+
+            <div className="mt-2 border-t border-slate-100 px-3 pb-1 pt-3">
+              <p className="pb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">Design version</p>
+              <div className="grid grid-cols-2 gap-1 rounded-full bg-navy-900/5 p-1 text-sm font-semibold">
+                {versions.map((v) => {
+                  const current = pathname === v.href;
+                  return (
+                    <Link
+                      key={v.href}
+                      href={v.href}
+                      onClick={closeAll}
+                      aria-current={current ? "page" : undefined}
+                      className={`rounded-full py-2 text-center transition ${
+                        current ? "bg-navy-900 text-white shadow" : "text-navy-800 hover:text-coral"
+                      }`}
+                    >
+                      {v.title}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
 
             <div className="mt-2 grid gap-1 border-t border-slate-100 pt-3 text-sm">
               <a href={contact.phoneHref} className="flex items-center gap-3 rounded-xl px-3 py-2 text-navy-800 hover:bg-coral/10">

@@ -39,6 +39,12 @@ export const navLinks: NavItem[] = [
   { label: "Contact", href: "https://www.ircc.world/contact-us" },
 ];
 
+// Design versions shown in the navbar switch.
+export const versions = [
+  { label: "V1", title: "Version 1 (dark)", href: "/" },
+  { label: "V2", title: "Version 2 (light)", href: "/v2" },
+];
+
 export const authLinks = {
   login: "https://www.ircc.world/login",
   register: "https://www.ircc.world/register",

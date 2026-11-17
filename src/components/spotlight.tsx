@@ -4,7 +4,15 @@ import { useRef, type ReactNode } from "react";
 
 // Wraps a section and paints a soft spotlight that follows the pointer.
 // Updates a CSS variable directly, so moving the mouse never re-renders React.
-export function Spotlight({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Spotlight({
+  children,
+  className = "",
+  tone = "dark",
+}: {
+  children: ReactNode;
+  className?: string;
+  tone?: "dark" | "light";
+}) {
   const ref = useRef<HTMLDivElement>(null);
 
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -23,7 +31,11 @@ export function Spotlight({ children, className = "" }: { children: ReactNode; c
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(520px_circle_at_var(--spot-x)_var(--spot-y),rgba(255,157,0,0.16),transparent_70%)] transition-[background] duration-200"
+        className={`pointer-events-none absolute inset-0 z-0 transition-[background] duration-200 ${
+          tone === "light"
+            ? "bg-[radial-gradient(520px_circle_at_var(--spot-x)_var(--spot-y),rgba(241,91,67,0.10),transparent_70%)]"
+            : "bg-[radial-gradient(520px_circle_at_var(--spot-x)_var(--spot-y),rgba(255,157,0,0.16),transparent_70%)]"
+        }`}
       />
       {children}
     </div>
